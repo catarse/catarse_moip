@@ -18,6 +18,12 @@ Configure the routes for your Catarse application. Add the following lines in th
 
     mount CatarseMoip::Engine => "/", :as => "catarse_moip"
 
+## Rails 3.2.x and Rails 4 support
+
+If you are using the Rails 3.2.x on Catarse's code, you can use the version `1.0.0`.
+
+For Rails 4 support use the `2.0.0` version.
+
 ### Configurations
 
 Create this configurations into Catarse database:

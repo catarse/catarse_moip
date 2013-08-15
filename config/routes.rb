@@ -5,9 +5,9 @@ CatarseMoip::Engine.routes.draw do
       get 'js'
     end
     member do
-      match :moip_response
-      match :review
-      match :get_moip_token
+      post :moip_response
+      get :review
+      post :get_moip_token
     end
   end
 end
