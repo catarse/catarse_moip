@@ -10,10 +10,10 @@ GIT
 PATH
   remote: .
   specs:
-    catarse_moip (3.0.5)
+    catarse_moip (3.1.1)
       enumerate_it
       httparty
-      libxml-ruby (~> 2.6.0)
+      libxml-ruby (~> 2.8.0)
       rails (~> 4.0)
 
 GEM
@@ -49,7 +49,7 @@ GEM
     builder (3.2.2)
     database_cleaner (1.3.0)
     diff-lcs (1.2.5)
-    enumerate_it (1.2.3)
+    enumerate_it (1.2.4)
       activesupport (>= 3.0.0)
     erubis (2.7.0)
     factory_girl (4.5.0)
@@ -63,7 +63,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (0.6.11)
     json (1.8.1)
-    libxml-ruby (2.6.0)
+    libxml-ruby (2.8.0)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
@@ -110,7 +110,7 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.2.0)
+    sprockets-rails (2.2.4)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
