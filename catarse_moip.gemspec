@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.0"
   s.add_dependency "httparty"
-  s.add_dependency('libxml-ruby', '~> 2.6.0')
+  s.add_dependency 'libxml-ruby', '~> 2.8.0'
   s.add_dependency "enumerate_it"
 
   s.add_development_dependency "rspec-rails", "~> 2.14.0"
