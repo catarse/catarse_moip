@@ -5,29 +5,8 @@ module CatarseMoip
   class MoipController < ApplicationController
     attr_accessor :contribution
 
-    class TransactionStatus < ::EnumerateIt::Base
-      associate_values(
-        :authorized =>      1,
-        :started =>         2,
-        :printed_boleto =>  3,
-        :finished =>        4,
-        :canceled =>        5,
-        :process =>         6,
-        :written_back =>    7,
-        :refunded => 9
-      )
-    end
-
     skip_before_filter :force_http
     layout :false
-
-    def create_notification
-      @contribution = PaymentEngines.find_payment key: params[:id_transacao]
-      process_moip_message if @contribution.payment_method == 'MoIP' || @contribution.payment_method.nil?
-      return render :nothing => true, :status => 200
-    rescue Exception => e
-      return render :text => "#{e.inspect}: #{e.message} recebemos: #{params}", :status => 422
-    end
 
     def js
       tries = 0
@@ -117,38 +96,6 @@ module CatarseMoip
             :payment_method => 'MoIP',
             :payment_service_fee => params["TaxaMoIP"]
           }) if params
-        end
-      end
-    end
-
-    def process_moip_message
-      contribution.with_lock do
-        first_update_contribution if contribution.payment_method.nil?
-        payment_notification = PaymentEngines.create_payment_notification contribution_id: contribution.id, extra_data: JSON.parse(params.to_json.force_encoding('iso-8859-1').encode('utf-8'))
-        payment_id = (contribution.payment_id.gsub(".", "").to_i rescue 0)
-
-        if payment_id <= params[:cod_moip].to_i
-          contribution.update_attributes payment_id: params[:cod_moip]
-
-          if (params[:valor].to_i/100.0) < contribution.value && params[:valor]
-            return contribution.invalid! unless contribution.invalid_payment?
-          end
-
-          case params[:status_pagamento].to_i
-          when TransactionStatus::PROCESS
-            payment_notification.deliver_process_notification
-          when TransactionStatus::AUTHORIZED, TransactionStatus::FINISHED
-            contribution.confirm! unless contribution.confirmed?
-          when TransactionStatus::WRITTEN_BACK, TransactionStatus::REFUNDED
-            contribution.refund! unless contribution.refunded?
-          when TransactionStatus::CANCELED
-            unless contribution.canceled?
-              contribution.cancel!
-              if contribution.payment_choice.downcase == 'boletobancario'
-                payment_notification.deliver_slip_canceled_notification
-              end
-            end
-          end
         end
       end
     end

@@ -17,8 +17,8 @@ module CatarseMoip
       true
     end
 
-    def direct_refund contribution
-      ::CatarseMoip::V2::Refund.start(contribution)
+    def direct_refund payment
+      ::CatarseMoip::V2::Refund.start(payment)
     end
 
   end
