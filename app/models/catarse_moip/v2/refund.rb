@@ -5,15 +5,15 @@ module CatarseMoip
 
       base_uri ::MOIP_V2_ENDPOINT
 
-      attr_accessor :contribution, :refund_options
+      attr_accessor :payment, :refund_options
 
-      def self.start(contribution)
-        _instance = new(contribution)
+      def self.start(payment)
+        _instance = new(payment)
         _instance.refund
       end
 
-      def initialize(contribution)
-        self.contribution = contribution
+      def initialize(payment)
+        self.payment = payment
         self.refund_options = define_refund_options
       end
 
@@ -66,7 +66,7 @@ module CatarseMoip
       end
 
       def bank_account
-        self.contribution.user.bank_account
+        self.payment.user.bank_account
       end
 
       def bank_account_document_type
@@ -83,14 +83,14 @@ module CatarseMoip
 
       def amount_to_refund
         if already_expired_refund_deadline?
-          ((self.contribution.value - self.contribution.payment_service_fee.to_f) * 100).to_i
+          ((self.payment.value - self.payment.gateway_fee.to_f) * 100).to_i
         else
-          self.contribution.price_in_cents
+          (self.payment.value * 100).round
         end
       end
 
       def refund_method
-        if already_expired_refund_deadline? || !self.contribution.is_credit_card?
+        if already_expired_refund_deadline? || !self.payment.is_credit_card?
           'BANK_ACCOUNT'
         else
           'CREDIT_CARD'
@@ -98,7 +98,7 @@ module CatarseMoip
       end
 
       def already_expired_refund_deadline?
-        self.contribution.confirmed_at < 170.days.ago
+        self.payment.paid_at < 170.days.ago
       end
 
       def basic_auth_params
@@ -114,7 +114,7 @@ module CatarseMoip
       end
 
       def parsed_payment_id
-        contribution.payment_id.gsub('.', '')
+        payment.gateway_id.gsub('.', '')
       end
     end
   end
