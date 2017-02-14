@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../test/dummy/config/environment", __FILE__)
 require 'rspec/rails'
+require 'factory_girl_rails'
 
 ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
 
@@ -30,6 +31,10 @@ RSpec.configure do |config|
   config.before(:each) do
     PaymentEngines.stub(:configuration).and_return({})
   end
+
+  config.include FactoryGirl::Syntax::Methods
+  FactoryGirl.definition_file_paths = [File.expand_path('../factories', __FILE__)]
+  FactoryGirl.find_definitions
 end
 
 def fixture_file(filename)
