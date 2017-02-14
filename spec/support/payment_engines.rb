@@ -1,5 +1,4 @@
 # dummy class to be stubbed should use interface defined in Catarse
 class PaymentEngines
-  class Interface
-  end
+  attr_accessor :key, :payment_id, :gateway_id, :value
 end
