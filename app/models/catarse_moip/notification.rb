@@ -1,0 +1,2 @@
+class CatarseMoip::Notification
+end
